@@ -105,4 +105,15 @@ const putTrain = async (req, res) => {
   }
 };
 
-export { trainRoutes, getTrains, getTrain , putTrain};
+const deleteTrain = async (req , res)=>{
+  const {trainId} = req.params;
+  const train = await Train.findByIdAndDelete(trainId);
+  if(!train){
+    return res.status(404).json({message: "Train not found"});
+  }
+  res.json({
+    message: "Train deleted successfully",
+    success: true,
+  });
+}
+export { trainRoutes, getTrains, getTrain , putTrain , deleteTrain};
