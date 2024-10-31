@@ -11,7 +11,7 @@ import {
   getUsers,
 } from "./controllers/user.js";
 
-import { trainRoutes , getTrains , getTrain} from "./controllers/train.js";
+import { trainRoutes , getTrains , getTrain , putTrain} from "./controllers/train.js";
 
 const app = express();
 const PORT = 5000;
@@ -33,7 +33,8 @@ app.get("/users", getUsers);
 //train api
 app.post("/trains" , trainRoutes);
 app.get("/trains" , getTrains);
-app.get("/train/:trainId" , getTrain)
+app.get("/train/:trainId" , getTrain);
+app.put("/user/:trainId" , putTrain)
 
 async function mongoConnection() {
   const conn = await mongoose.connect(`${process.env.MONGO_URL}`);

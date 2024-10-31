@@ -61,7 +61,7 @@ const getTrains = async (req, res) => {
 
 const getTrain = async (req, res) => {
   const { trainId } = req.params;
-  const train = await Train.findOne({ _id : trainId });
+  const train = await Train.findOne({ _id: trainId });
   if (!train) {
     return res.status(404).json({ message: "Train not found" });
   }
@@ -71,4 +71,38 @@ const getTrain = async (req, res) => {
     data: train,
   });
 };
-export { trainRoutes, getTrains, getTrain };
+
+const putTrain = async (req, res) => {
+  const { trainId } = req.params;
+  const { trainNumber, trainName, source, destination } = req.body;
+
+  try {
+    const train = await Train.findByIdAndUpdate(
+      trainId,
+      {
+        $set: {
+          trainNumber,
+          trainName,
+          source,
+          destination,
+        },
+      },
+      { new: true }
+    );
+
+    if (!train) {
+      return res.status(404).json({ message: "Train not found" });
+    }
+
+    res.json({
+      message: "Train updated successfully",
+      success: true,
+      data: train,
+    });
+  } catch (error) {
+    console.error("Error updating train:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export { trainRoutes, getTrains, getTrain , putTrain};
