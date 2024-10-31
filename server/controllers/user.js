@@ -42,4 +42,38 @@ const postLogin = async (req, res) => {
     data: user,
   });
 };
-export { postSignup , postLogin};
+const putUser = async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById({ _id: id });
+  const { name, email, phone, bookings } = req.body;
+  await User.updateOne(
+    {
+      _id: id,
+    },
+    {
+      $set: {
+        name: name,
+        email: email,
+        phone: phone,
+        bookings: bookings,
+      },
+    }
+  );
+  res.json({
+    message: "User updated successfully",
+    success : true,
+    data : user
+  })
+};
+
+const getUsers = async (req ,res)=>{
+  const user = await User.find();
+  res.json({
+    message: "User data fetched successfully",
+    success: true,
+    data : user
+  })
+};
+
+
+export { postSignup, postLogin  , putUser , getUsers};
