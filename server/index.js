@@ -23,7 +23,8 @@ import {
   createBooking,
   getBooking,
   updateBooking,
-  getBookings
+  getBookings,
+  deleteBooking
 } from "./controllers/booking.js"
 
 const app = express();
@@ -55,6 +56,7 @@ app.post("/bookings", createBooking);
 app.get("/booking/:bookingId" ,getBooking);
 app.get('/bookings' , getBookings)
 app.put("/booking/:bookingId", updateBooking);
+app.delete("/booking/:bookingId", deleteBooking)
 
 async function mongoConnection() {
   const conn = await mongoose.connect(`${process.env.MONGO_URL}`);
