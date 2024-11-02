@@ -1,0 +1,12 @@
+.auth-from-handle-container{
+    display: block;
+    margin: 10px auto;
+    background-color: antiquewhite;
+    padding: 10px;
+}
+
+.auth-container{
+    display: block;
+    margin: 10px auto;
+    background-color: aqua;
+}
