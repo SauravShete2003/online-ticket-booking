@@ -2,13 +2,12 @@ import User from "./../models/User.js";
 import md5 from "md5";
 
 const postSignup = async (req, res) => {
-  const { name, email, phone, password, bookings } = req.body;
+  const { name, email, phone, password } = req.body;
   const user = new User({
     name,
     email,
     phone,
-    password: md5(password),
-    bookings,
+    password: md5(password)
   });
   try {
     const savedUser = await user.save();

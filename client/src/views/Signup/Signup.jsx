@@ -1,69 +1,96 @@
 import React, { useState } from "react";
-import "./Signup.css"
+import axios from 'axios';
+import toast, { Toaster } from "react-hot-toast";
+
 function Signup() {
   const [fromData, setFromData] = useState({
     name: "",
     email: "",
     password: "",
-    phone: "",
-    bookings: "",
+    phone: ""
   });
+
+  const userCreate = async () => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_URL}/signup`, fromData);
+      setFromData({ name: "", email: "", password: "", phone: "" });
+      toast.success("User created successfully");
+
+      if (response) {
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 2000);
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to create user. Please try again.");
+    }
+  };
 
   return (
     <div className="auth-container">
-      <h1>Signup Page</h1>
+      <h1 className="auth-heading">Signup Page</h1>
 
-      <div className="">
-        <form className="auth-from-handle-container">
+      <form >
+        <label htmlFor="name" className="auth-input-label">
+          Full Name:
+        </label>
+        <input
+          id="name"
+          type="text"
+          className="auth-input"
+          placeholder="Enter your full name"
+          value={fromData.name}
+          onChange={(e) => setFromData({ ...fromData, name: e.target.value })}
+        />
 
-          <label>Enter Your Name:</label>
-          <br />
-          <input
-            type="text"
-            placeholder="Enter your name"
-            value={fromData.name}
-            onChange={(e) =>
-              setFromData({ ...fromData, name: e.target.value })}/>
-          <br />
-
-          <label>Enter Your Email:</label>
-          <br />
-          <input
+        <label htmlFor="email" className="auth-input-label">
+          Email Address:
+        </label>
+        <input
+          id="email"
           type="email"
+          className="auth-input"
           placeholder="Enter your email"
           value={fromData.email}
-          onChange={(e) =>
-            setFromData({ ...fromData, email: e.target.value })}/>
-          <br />
+          onChange={(e) => setFromData({ ...fromData, email: e.target.value })}
+        />
 
-          <label>Enter Your Password:</label>
-          <br />
-          <input
+        <label htmlFor="password" className="auth-input-label">
+          Password:
+        </label>
+        <input
+          id="password"
           type="password"
-          placeholder="Enter your password"
+          className="auth-input"
+          placeholder="Create a password"
           value={fromData.password}
-          onChange={(e) =>setFromData({ ...fromData, password: e.target.value })}/>
-          <br />
+          onChange={(e) =>
+            setFromData({ ...fromData, password: e.target.value })
+          }
+        />
 
-          <label>Enter Your Phone Number:</label>
-          <br />
-          <input
-          type="number"
-          placeholder="Enter your number"
+        <label htmlFor="phone" className="auth-input-label">
+          Phone Number:
+        </label>
+        <input
+          id="phone"
+          type="tel"
+          className="auth-input"
+          placeholder="Enter your phone number"
           value={fromData.phone}
-          onChange={(e) => setFromData({ ...fromData, phone: e.target.value })}/>
-          <br />
+          onChange={(e) => setFromData({ ...fromData, phone: e.target.value })}
+        />
 
-          <label>Enter Your Bookings:</label>
-          <br />
-          <input
-          type="number"
-          placeholder="Enter your bookings"
-          value={fromData.bookings}
-          onChange={(e) =>setFromData({ ...fromData, bookings: e.target.value })}/>
-
-        </form>
-      </div>
+        <button
+          type="button"
+          className="auth-button"
+          onClick={userCreate}
+        >
+          Book Now
+        </button>
+      </form>
+      <Toaster />
     </div>
   );
 }
