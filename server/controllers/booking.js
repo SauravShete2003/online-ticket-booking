@@ -1,5 +1,5 @@
 import Booking from "./../models/Booking.js";
-// import { getBooking, getBookings, createBooking, updateBooking, deleteBooking }
+
 const createBooking = async (req, res) => {
   const { userId, trainId, seatNumber } = req.body;
   if (!trainId || !userId) {

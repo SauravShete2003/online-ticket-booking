@@ -1,10 +1,11 @@
 import React from 'react'
-import Signup from '../Signup/Signup';
+import Bookings from '../Bookings/Bookings';
+
 
 function Home() {
   return (
     <div>
-      <Signup/>
+   <Bookings/>
     </div>
   )
 }

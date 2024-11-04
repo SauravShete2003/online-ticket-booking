@@ -78,3 +78,16 @@ font-family: Arial, sans-serif;
 .auth-container, .auth-button {
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
 }
+
+input[type="date"] {
+    padding: 10px;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  
+  input[type="date"]:focus {
+    border-color: #0056b3;
+  }
+  
