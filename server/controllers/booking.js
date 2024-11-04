@@ -1,33 +1,42 @@
 import Booking from "./../models/Booking.js";
+import Train from "./../models/Train.js";
 
-const createBooking = async (req, res) => {
-  const { userId, trainId, seatNumber } = req.body;
-  if (!trainId || !userId) {
-    return res.status(400).json({
-      message: "trainId and userId are required and must be valid",
-      success: false,
-    });
+const bookingRoutes = async (req, res) => {
+  const { trainId, userId, seatsBooked } = req.body;
+
+  if (!trainId || !userId || !seatsBooked) {
+    return res.status(400).json({ message: "All fields are required" });
   }
-  const newBooking = new Booking({
-    userId,
-    train: trainId,
-    seatNumber,
-  });
+
   try {
-    const savedBooking = await newBooking.save();
+    const train = await Train.findById(trainId);
+    if (!train) {
+      return res.status(404).json({ message: "Train not found" });
+    }
+    if (train.seats < seatsBooked) {
+      return res.status(400).json({ message: "Not enough seats available" });
+    }
+
+    train.seats -= seatsBooked;
+    await train.save();
+
+    const booking = new Booking({ trainId, userId, seatsBooked });
+    const savedBooking = await booking.save();
+
     res.status(201).json({
-      message: "Booking created successfully",
+      message: "Booking successful",
       data: savedBooking,
       success: true,
     });
-  } catch (err) {
+  } catch (error) {
     res.status(500).json({
-      message: "Error creating booking",
-      error: err.message,
-      success: false,
+      message: "Booking failed",
+      error: error.message,
     });
   }
 };
+
+export default bookingRoutes;
 
 const getBooking = async (req, res) => {
   const { bookingId } = req.params;
@@ -127,5 +136,4 @@ const deleteBooking = async (req, res) => {
   }
 };
 
-
-export { createBooking, getBooking, updateBooking, getBookings, deleteBooking };
+export { bookingRoutes, getBooking, updateBooking, getBookings, deleteBooking };

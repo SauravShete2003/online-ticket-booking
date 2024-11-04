@@ -20,7 +20,7 @@ import {
 } from "./controllers/train.js";
 
 import {
-  createBooking,
+  bookingRoutes,
   getBooking,
   updateBooking,
   getBookings,
@@ -52,7 +52,7 @@ app.put("/user/:trainId", putTrain);
 app.delete("/train/:trainId", deleteTrain);
 
 //booking API
-app.post("/bookings", createBooking);
+app.post("/bookings", bookingRoutes);
 app.get("/booking/:bookingId" ,getBooking);
 app.get('/bookings' , getBookings)
 app.put("/booking/:bookingId", updateBooking);

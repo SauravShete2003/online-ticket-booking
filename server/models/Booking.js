@@ -1,29 +1,11 @@
 import { Schema, model } from "mongoose";
 
-const bookingSchema = new Schema(
-  {
-    userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    train: {
-      type: Schema.Types.ObjectId,
-      ref: "Train",
-      required: true,
-    },
-    seatNumber: {
-      type: Number,
-      required: true,
-    },
-    status: {
-      type: String,
-      enum: ["booked", "cancelled", "pending"],
-      default: "booked",
-    },
-  },
-  { timestamps: true }
-);
+const bookingSchema = new Schema({
+  trainId: { type: Schema.Types.ObjectId, ref: "Train", required: true },
+  userId: { type: String, required: true },  // Assuming each user has a unique ID
+  seatsBooked: { type: Number, required: true },
+  bookingDate: { type: Date, default: Date.now },
+});
 
 const Booking = model("Booking", bookingSchema);
 export default Booking;
