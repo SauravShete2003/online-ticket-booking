@@ -1,71 +1,81 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
+
+const redirectToBooking = (source, destination, date) => {
+  const formattedDate = new Date(date).toISOString().split("T")[0];
+  const bookingURL = `https://www.irctc.co.in/nget/train-search?source=${source}&destination=${destination}&journeyDate=${formattedDate}`;
+  window.open(bookingURL, "_blank");
+};
 
 const TrainSearch = () => {
+  const [source, setSource] = useState("");
+  const [destination, setDestination] = useState("");
+  const [date, setDate] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [userId] = useState(""); // Replace with actual user ID
 
-  useEffect(() => {
-    const fetchTrains = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_URL}/trains`);
-        console.log("API Response:", response.data); // Log response
-        setSearchResults(response.data.trains || []); // Adjust based on response structure
-      } catch (error) {
-        console.error("Error fetching trains:", error);
-      }
-    };
+  const handleSearch = () => {
+    const mockData = [];
 
-    fetchTrains();
-  }, []);
-
-  const handleBooking = async (trainId) => {
-    const seatsBooked = prompt("Enter number of seats to book:");
-
-    if (seatsBooked) {
-      try {
-        const response = await axios.post(`${process.env.REACT_APP_URL}/bookings`, {
-          trainId,
-          userId,
-          seatsBooked: parseInt(seatsBooked),
-        });
-
-        if (response.data.success) {
-          alert("Booking successful!");
-          setSearchResults((prevResults) =>
-            prevResults.map((train) =>
-              train._id === trainId ? { ...train, seats: train.seats - seatsBooked } : train
-            )
-          );
-        } else {
-          alert(response.data.message || "Booking failed.");
-        }
-      } catch (error) {
-        console.error("Booking error:", error);
-        alert("Error booking train. Please try again later.");
-      }
+    if (!source || !destination || !date) {
+      alert("Please fill all fields");
+    } else if (mockData.length === 0) {
+      redirectToBooking(source, destination, date);
+    } else {
+      setSearchResults(mockData);
     }
   };
 
   return (
-    <div>
-      <h3>Available Trains:</h3>
-      <ul>
-        {Array.isArray(searchResults) && searchResults.length > 0 ? (
-          searchResults.map((train) => (
-            <li key={train._id}>
-              <p>Train Name: {train.trainName}</p>
-              <p>Departure: {train.departureTime}</p>
-              <p>Arrival: {train.arrivalTime}</p>
-              <p>Fare: {train.fare}</p>
-              <p>Seats Available: {train.seats}</p>
-              <button onClick={() => handleBooking(train._id)}>Book Train</button>
-            </li>
-          ))
-        ) : (
-          <p>No trains available</p>
-        )}
-      </ul>
+    <div className="auth-container">
+      <h2 className="auth-heading">Train Search</h2>
+      <div>
+        <label className="auth-input-label">Source:</label>
+        <input
+          type="text"
+          className="auth-input"
+          value={source}
+          onChange={(e) => setSource(e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="auth-input-label">Destination:</label>
+        <input
+          type="text"
+          className="auth-input"
+          value={destination}
+          onChange={(e) => setDestination(e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="auth-input-label">Date:</label>
+        <input
+          type="date"
+          className="auth-input"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
+      </div>
+      <button onClick={handleSearch} className="auth-button">
+        Search Trains
+      </button>
+
+      {searchResults.length > 0 && (
+        <div>
+          <h3>Available Trains:</h3>
+          <ul>
+            {searchResults.map((train) => {
+              const { id, name, departureTime, arrivalTime, duration } = train;
+              return (
+                <li key={id}>
+                  <p>Train Name: {name}</p>
+                  <p>Departure: {departureTime}</p>
+                  <p>Arrival: {arrivalTime}</p>
+                  <p>Duration: {duration}</p>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
